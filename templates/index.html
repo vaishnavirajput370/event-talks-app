@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Tracker</title>
+    <meta name="description" content="Track, search, and share Google Cloud BigQuery release notes instantly.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Navigation -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <span class="material-symbols-outlined">database</span>
+                </div>
+                <div>
+                    <h1>BigQuery Release Notes</h1>
+                    <p class="subtitle" id="feed-subtitle">Fetching latest release notes...</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="btn-refresh" class="btn btn-primary" title="Refresh Release Notes">
+                    <span id="spinner-icon" class="material-symbols-outlined icon-spin">sync</span>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main-layout">
+            <!-- Feed Section -->
+            <section class="feed-section">
+                <!-- Search and Filter Bar -->
+                <div class="filter-bar">
+                    <div class="search-wrapper">
+                        <span class="material-symbols-outlined search-icon">search</span>
+                        <input type="text" id="search-input" placeholder="Search updates by keywords or feature..." autocomplete="off">
+                    </div>
+                    <div class="tag-filters-container">
+                        <button class="filter-tag active" data-filter="all">All</button>
+                        <button class="filter-tag" data-filter="feature">Features</button>
+                        <button class="filter-tag" data-filter="changed">Changes</button>
+                        <button class="filter-tag" data-filter="deprecated">Deprecations</button>
+                        <button class="filter-tag" data-filter="fixed">Fixes</button>
+                    </div>
+                </div>
+
+                <!-- Feed list container -->
+                <div id="notes-container" class="notes-list">
+                    <!-- Skeleton Loader (shows during load) -->
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+            </section>
+
+            <!-- Tweet / Detail Section -->
+            <section class="composer-section">
+                <div class="composer-sticky">
+                    <div class="composer-card" id="composer-card">
+                        <!-- Default state -->
+                        <div class="composer-placeholder" id="composer-placeholder">
+                            <span class="material-symbols-outlined placeholder-icon">ios_share</span>
+                            <h3>Share an Update</h3>
+                            <p>Select any release note card on the left to customize and tweet about it directly to your followers.</p>
+                        </div>
+
+                        <!-- Composer state (hidden by default) -->
+                        <div class="composer-active hidden" id="composer-active">
+                            <div class="composer-header">
+                                <span class="badge badge-tweet">Drafting Tweet</span>
+                                <button id="btn-clear-selection" class="btn-text" title="Cancel Draft">
+                                    <span class="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+                            
+                            <div class="selected-note-preview">
+                                <h4 id="preview-note-title">Release Note Title</h4>
+                                <p id="preview-note-date">July 4, 2026</p>
+                            </div>
+
+                            <div class="tweet-editor-wrapper">
+                                <label for="tweet-textarea">Compose Tweet</label>
+                                <textarea id="tweet-textarea" placeholder="What's happening?" rows="6"></textarea>
+                                
+                                <div class="character-progress-container">
+                                    <div class="progress-bar-bg">
+                                        <div id="char-progress" class="progress-bar-fill" style="width: 0%"></div>
+                                    </div>
+                                    <span id="char-counter">0 / 280</span>
+                                </div>
+                            </div>
+
+                            <!-- Hashtags & Link Manager -->
+                            <div class="composer-footer">
+                                <div class="options-group">
+                                    <span class="option-label">Quick Hashtags</span>
+                                    <div class="hashtags-list">
+                                        <button class="hashtag-btn active" data-hashtag="#BigQuery">#BigQuery</button>
+                                        <button class="hashtag-btn active" data-hashtag="#GoogleCloud">#GoogleCloud</button>
+                                        <button class="hashtag-btn" data-hashtag="#GCP">#GCP</button>
+                                        <button class="hashtag-btn" data-hashtag="#DataEngineering">#DataEngineering</button>
+                                    </div>
+                                </div>
+
+                                <button id="btn-tweet" class="btn btn-tweet-submit">
+                                    <svg class="twitter-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                    </svg>
+                                    <span>Share on X</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Error Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <span class="material-symbols-outlined toast-icon">error</span>
+        <span id="toast-message">An error occurred</span>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
